@@ -1,0 +1,39 @@
+SELECT p.FirstName, p.LastName, d.Name AS Department FROM HumanResources.Employee e
+join Person.Person p ON e.BusinessEntityID = p.BusinessEntityID
+join HumanResources.EmployeeDepartmentHistory edh ON e.BusinessEntityID = edh.BusinessEntityID
+join HumanResources.Department d ON d.DepartmentID = edh.DepartmentID
+
+SELECT edh.BusinessEntityID, p.FirstName, p.LastName, d.Name FROM HumanResources.EmployeeDepartmentHistory edh
+join Person.Person p ON edh.BusinessEntityID = p.BusinessEntityID
+join HumanResources.Department d ON d.DepartmentID = edh.DepartmentID
+ORDER BY BusinessEntityID
+
+SELECT SUBSTRING(LoginID, 1,
+       CHARINDEX('\', LoginID)-1) AS domainName ,
+    SUBSTRING(LoginID, 
+        CHARINDEX('\', LoginID)+1, 
+        LEN(LoginID)-CHARINDEX('@', LoginID)) AS LoginID
+FROM HumanResources.Employee
+ORDER BY LoginID;
+
+SELECT LoginID, CONCAT((
+	   REPLACE(SUBSTRING( LoginID , 
+	   CHARINDEX('\', LoginID), 
+	   LEN(LoginID)), '\', '')) ,'@',
+	   LEFT(LoginID , 
+	   CHARINDEX('\', LoginID) - 1),'.com') AS EmailID
+FROM HumanResources.Employee
+
+SELECT BirthDate, 
+	   DATEDIFF(YY,BirthDate,GETDATE()) -
+	   CASE
+		WHEN DATEADD 
+		(YY,DATEDIFF(YY,BirthDate,GETDATE()),BirthDate)> GETDATE() 
+		THEN 1
+			ELSE 0
+END AS [Age]
+FROM HumanResources.Employee;
+
+
+
+
